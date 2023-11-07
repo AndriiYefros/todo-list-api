@@ -10,6 +10,14 @@ class Task extends Model
     use HasFactory;
 
     /**
+     * @var array
+     */
+    public static array $statusValues = [
+        'todo',
+        'done',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
