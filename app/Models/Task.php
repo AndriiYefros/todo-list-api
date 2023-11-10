@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class Task extends Model
 {
@@ -59,23 +58,18 @@ class Task extends Model
         'created_at',
     ];
 
-    /**
-     * Get first task or fail
-     */
-    public static function getFirstOrFail(int $id)
+    protected static function boot()
     {
-        $conditions = [];
+        parent::boot();
 
-        if ($id) {
-            $conditions[] = ['id', '=', $id];
-        }
-        $conditions[] = ['user_id', '=', Auth::id()];
+        self::creating(function($model) {
+            $model->user_id = auth()->id();
+            $model->created_at = now();
+        });
 
-        if (request()->isMethod('delete')) {
-            $conditions[] = ['status', '=', Task::TODO];
-        }
-
-        return Task::where($conditions)->firstOrFail();
+        self::addGlobalScope(function (Builder $builder) {
+            $builder->where('user_id', auth()->id());
+        });
     }
 
     /**

@@ -14,8 +14,6 @@ class TaskRepository implements TaskInterface
     {
         $query = Task::query();
 
-        $query->where('user_id', Auth::id());
-
         // Status Parameter
         if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
@@ -41,17 +39,12 @@ class TaskRepository implements TaskInterface
 
     public function createTask(TaskRequest $request)
     {
-        $request->merge([
-            'user_id' => Auth::id(),
-            'created_at' => now(),
-        ]);
-
         return Task::create($request->all());
     }
 
     public function updateTask(TaskRequest $request, $id)
     {
-        $task = Task::getFirstOrFail($id);
+        $task = Task::findOrFail($id);
 
         $task->fill($request->except(['id', 'user_id']));
         $task->save();
@@ -61,7 +54,7 @@ class TaskRepository implements TaskInterface
 
     public function completeTask($id)
     {
-        $task = Task::getFirstOrFail($id);
+        $task = Task::findOrFail($id);
 
         if ($task->status === Task::TODO || is_null($task->completed_at)) {
             $task->status = Task::DONE;
@@ -74,7 +67,10 @@ class TaskRepository implements TaskInterface
 
     public function deleteTask($id)
     {
-        $task = Task::getFirstOrFail($id);
+        $task = Task::where([
+            ['id', '=', $id],
+            ['status', '=', Task::TODO],
+        ])->firstOrFail();
 
         return $task->delete();
     }
