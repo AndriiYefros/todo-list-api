@@ -12,12 +12,15 @@ class Task extends Model
 
     public $timestamps = false;
 
+    const TODO = 'todo';
+    const DONE = 'done';
+
     /**
      * @var array
      */
     public static array $statusValues = [
-        'todo',
-        'done',
+        self::TODO,
+        self::DONE,
     ];
 
     /**
@@ -42,7 +45,7 @@ class Task extends Model
      */
     protected $attributes = [
         'parent_id' => 0,
-        'status' => 'todo',
+        'status' => self::TODO,
         'priority' => 1,
     ];
 

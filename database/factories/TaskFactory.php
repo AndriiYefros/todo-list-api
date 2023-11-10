@@ -20,7 +20,7 @@ class TaskFactory extends Factory
         return [
             'parent_id' => 0,
             'user_id' => rand(1, 10),
-            'status' => Task::$statusValues[0],
+            'status' => Task::TODO,
             'priority' => rand(1, 5),
             'title' => fake()->sentence(5),
             'description' => fake()->paragraph(),

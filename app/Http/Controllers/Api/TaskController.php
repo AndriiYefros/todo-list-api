@@ -85,8 +85,8 @@ class TaskController extends Controller
             ['user_id', '=', Auth::id()],
         ])->firstOrFail();
 
-        if ($task->status === 'todo' || is_null($task->completed_at)) {
-            $task->status = 'done';
+        if ($task->status === Task::TODO || is_null($task->completed_at)) {
+            $task->status = Task::DONE;
             $task->completed_at = now();
             $task->save();
         }
@@ -102,7 +102,7 @@ class TaskController extends Controller
         $task = Task::where([
             ['id', '=', $id],
             ['user_id', '=', Auth::id()],
-            ['status', '=', 'todo'],
+            ['status', '=', Task::TODO],
         ])->firstOrFail();
 
         $task->delete();
