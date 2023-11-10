@@ -19,7 +19,7 @@ return new class () extends Migration {
             $table->string('title');
             $table->text('description');
             $table->timestamp('completed_at')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable();
 
             $table->index('parent_id');
             $table->index('user_id');

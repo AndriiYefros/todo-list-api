@@ -20,10 +20,11 @@ class TaskFactory extends Factory
         return [
             'parent_id' => 0,
             'user_id' => rand(1, 10),
-            'status' => Task::$statusValues[rand(0, 1)],
+            'status' => Task::$statusValues[0],
             'priority' => rand(1, 5),
-            'title' => fake()->title(),
+            'title' => fake()->sentence(5),
             'description' => fake()->paragraph(),
+            'created_at' => now(),
         ];
     }
 }
