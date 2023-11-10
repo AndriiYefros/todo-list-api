@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Interfaces\TaskInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
@@ -59,6 +60,8 @@ class TaskController extends Controller
      */
     public function destroy(int $id)
     {
-        return $this->taskInterface->deleteTask($id);
+        $this->taskInterface->deleteTask($id);
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

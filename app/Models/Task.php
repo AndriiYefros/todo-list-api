@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Task extends Model
 {
@@ -59,9 +60,28 @@ class Task extends Model
     ];
 
     /**
+     * Get first task or fail
+     */
+    public static function getFirstOrFail(int $id)
+    {
+        $conditions = [];
+
+        if ($id) {
+            $conditions[] = ['id', '=', $id];
+        }
+        $conditions[] = ['user_id', '=', Auth::id()];
+
+        if (request()->isMethod('delete')) {
+            $conditions[] = ['status', '=', Task::TODO];
+        }
+
+        return Task::where($conditions)->firstOrFail();
+    }
+
+    /**
      * Scope a query to fulltext search
      */
-    public function scopeOfSearch(Builder $query, $search = '')
+    public function scopeSearch(Builder $query, $search = '')
     {
         $query->when($search, function ($query, $search) {
             $query->whereFullText(['title', 'description'], $search);
@@ -75,7 +95,7 @@ class Task extends Model
     /**
      * Scope a query to sort
      */
-    public function scopeOfSort(Builder $query, $sortStrValues = [])
+    public function scopeSorting(Builder $query, $sortStrValues = [])
     {
         $sortValues = array_filter(array_map('trim', explode(',', $sortStrValues)));
         if (!empty($sortValues)) {

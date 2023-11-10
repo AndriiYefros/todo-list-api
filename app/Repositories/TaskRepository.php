@@ -6,7 +6,6 @@ use App\Http\Requests\TaskRequest;
 use App\Interfaces\TaskInterface;
 use App\Models\Task;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class TaskRepository implements TaskInterface
@@ -29,12 +28,12 @@ class TaskRepository implements TaskInterface
 
         // Search Parameter
         if ($request->has('search')) {
-            $query->ofSearch($request->search);
+            $query->search($request->search);
         }
 
         // Sort Parameter
         if ($request->has('sort')) {
-            $query->ofSort($request->sort);
+            $query->sorting($request->sort);
         }
 
         return $query->get()->all();
@@ -52,10 +51,7 @@ class TaskRepository implements TaskInterface
 
     public function updateTask(TaskRequest $request, $id)
     {
-        $task = Task::where([
-            ['id', '=', $id],
-            ['user_id', '=', Auth::id()],
-        ])->firstOrFail();
+        $task = Task::getFirstOrFail($id);
 
         $task->fill($request->except(['id', 'user_id']));
         $task->save();
@@ -65,10 +61,7 @@ class TaskRepository implements TaskInterface
 
     public function completeTask($id)
     {
-        $task = Task::where([
-            ['id', '=', $id],
-            ['user_id', '=', Auth::id()],
-        ])->firstOrFail();
+        $task = Task::getFirstOrFail($id);
 
         if ($task->status === Task::TODO || is_null($task->completed_at)) {
             $task->status = Task::DONE;
@@ -81,14 +74,8 @@ class TaskRepository implements TaskInterface
 
     public function deleteTask($id)
     {
-        $task = Task::where([
-            ['id', '=', $id],
-            ['user_id', '=', Auth::id()],
-            ['status', '=', Task::TODO],
-        ])->firstOrFail();
+        $task = Task::getFirstOrFail($id);
 
-        $task->delete();
-
-        return response(null, Response::HTTP_NO_CONTENT);
+        return $task->delete();
     }
 }
