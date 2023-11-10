@@ -55,6 +55,11 @@ class TaskRepository implements TaskInterface
     {
         $task = Task::findOrFail($id);
 
+        $ids = (new Task)->getSubTaskIds($id, false, 'todo');
+        if ($ids) {
+            return $task;
+        }
+
         if ($task->status === Task::TODO || is_null($task->completed_at)) {
             $task->status = Task::DONE;
             $task->completed_at = now();

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Task extends Model
 {
@@ -70,6 +71,26 @@ class Task extends Model
         self::addGlobalScope(function (Builder $builder) {
             $builder->where('user_id', auth()->id());
         });
+    }
+
+    public function getSubTaskIds($taskId, $withParent = false, $status = null)
+    {
+        $children = [];
+        if ($withParent) {
+            $children[] = $taskId;
+        }
+
+        $query = $this::select('id');
+        $query->where('parent_id', $taskId);
+        if ($status) {
+            $query->where('status', $status);
+        }
+        $parentTasks = $query->get();
+
+        foreach ($parentTasks as $task) {
+            $children[] = $this->getSubTaskIds($task->id, true);
+        }
+        return Arr::flatten($children);
     }
 
     /**
