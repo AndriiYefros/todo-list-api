@@ -62,7 +62,7 @@ class Task extends Model
     {
         parent::boot();
 
-        self::creating(function($model) {
+        self::creating(function ($model) {
             $model->user_id = auth()->id();
             $model->created_at = now();
         });
