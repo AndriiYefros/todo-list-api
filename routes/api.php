@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\TaskController;
+//use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthController::class, 'login'])->name('api.login');
-});
+Route::prefix('auth')
+    ->name('api.auth.')
+    ->group(function () {
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
+    });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:sanctum')
+    ->prefix('tasks')
+    ->name('api.tasks.')
+    ->group(function () {
+        Route::get('/', [TaskController::class, 'index'])->name('index');
+        Route::post('/create', [TaskController::class, 'store'])->name('store');
+        Route::put('/update/{id}', [TaskController::class, 'update'])->name('update');
+        Route::patch('/complete/{id}', [TaskController::class, 'complete'])->name('complete');
+        Route::delete('/delete/{id}', [TaskController::class, 'destroy'])->name('destroy');
+    });
