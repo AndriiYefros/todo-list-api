@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TaskController;
-//use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,8 +26,8 @@ Route::middleware('auth:sanctum')
     ->name('api.tasks.')
     ->group(function () {
         Route::get('/', [TaskController::class, 'index'])->name('index');
-        Route::post('/create', [TaskController::class, 'store'])->name('store');
-        Route::put('/update/{id}', [TaskController::class, 'update'])->name('update');
+        Route::post('/', [TaskController::class, 'store'])->name('store');
+        Route::put('/{id}', [TaskController::class, 'update'])->name('update');
         Route::patch('/complete/{id}', [TaskController::class, 'complete'])->name('complete');
-        Route::delete('/delete/{id}', [TaskController::class, 'destroy'])->name('destroy');
+        Route::delete('/{id}', [TaskController::class, 'destroy'])->name('destroy');
     });

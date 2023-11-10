@@ -12,8 +12,8 @@ class Task extends Model
 
     public $timestamps = false;
 
-    const TODO = 'todo';
-    const DONE = 'done';
+    public const TODO = 'todo';
+    public const DONE = 'done';
 
     /**
      * @var array
