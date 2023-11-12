@@ -2,32 +2,33 @@
 
 namespace App\Repositories;
 
-use App\Http\Requests\TaskRequest;
 use App\Interfaces\TaskRepositoryInterface;
 use App\Models\Task;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    public function getAllTasks($status, $priority, $search, $sort)
+    /**
+     * Get all Tasks
+     *
+     * @param ?string $status
+     * @param ?int $priority
+     * @param ?string $search
+     * @param ?string $sort
+     * @return array
+     */
+    public function getAllTasks(?string $status, ?int $priority, ?string $search, ?string $sort)
     {
         $query = Task::query();
 
-        // Status Parameter
         if ($status) {
             $query->where('status', $status);
         }
-
-        // Priority Parameter
         if ($priority) {
             $query->where('priority', $priority);
         }
-
-        // Search Parameter
         if ($search) {
             $query->search($search);
         }
-
-        // Sort Parameter
         if ($sort) {
             $query->sorting($sort);
         }
@@ -35,12 +36,23 @@ class TaskRepository implements TaskRepositoryInterface
         return $query->get()->all();
     }
 
-    public function createTask($requestData)
+    /**
+     * Create Task
+     *
+     * @param array $requestData
+     */
+    public function createTask(array $requestData)
     {
         return Task::create($requestData);
     }
 
-    public function updateTask($requestData, $id)
+    /**
+     * Update Task
+     *
+     * @param array $requestData
+     * @param int $id
+     */
+    public function updateTask(array $requestData, int $id)
     {
         $task = Task::findOrFail($id);
         $task->fill($requestData);
@@ -49,7 +61,12 @@ class TaskRepository implements TaskRepositoryInterface
         return $task;
     }
 
-    public function completeTask($id)
+    /**
+     * Complete Task
+     *
+     * @param int $id
+     */
+    public function completeTask(int $id)
     {
         $task = Task::findOrFail($id);
 
@@ -67,7 +84,12 @@ class TaskRepository implements TaskRepositoryInterface
         return $task;
     }
 
-    public function deleteTask($id)
+    /**
+     * Delete Task
+     *
+     * @param int $id
+     */
+    public function deleteTask(int $id)
     {
         $task = Task::where([
             ['id', '=', $id],

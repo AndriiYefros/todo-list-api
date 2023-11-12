@@ -7,9 +7,14 @@ use App\Http\Requests\TaskRequest;
 interface TaskRepositoryInterface
 {
     /**
-     * Get all Tasks
+     * Get All Tasks
+     *
+     * @param ?string $status
+     * @param ?int $priority
+     * @param ?string $search
+     * @param ?string $sort
      */
-    public function getAllTasks($status, $priority, $search, $sort);
+    public function getAllTasks(?string $status, ?int $priority, ?string $search, ?string $sort);
 
     /**
      * Create Task
@@ -22,21 +27,21 @@ interface TaskRepositoryInterface
      * Update Task
      *
      * @param array $requestData
-     * @param integer $id
+     * @param int $id
      */
     public function updateTask(array $requestData, int $id);
 
     /**
      * Complete Task
      *
-     * @param integer $id
+     * @param int $id
      */
     public function completeTask(int $id);
 
     /**
      * Delete Task
      *
-     * @param integer $id
+     * @param int $id
      */
     public function deleteTask(int $id);
 }

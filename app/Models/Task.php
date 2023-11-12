@@ -31,12 +31,10 @@ class Task extends Model
      */
     protected $fillable = [
         'parent_id',
-        'user_id',
         'status',
         'priority',
         'title',
         'description',
-        'created_at'
     ];
 
     /**
@@ -59,7 +57,10 @@ class Task extends Model
         'created_at',
     ];
 
-    protected static function boot()
+    /**
+     * Set global scopes for all queries
+     */
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -73,7 +74,15 @@ class Task extends Model
         });
     }
 
-    public function getSubTaskIds($taskId, $withParent = false, $status = null)
+    /**
+     * Get all ids subtasks by parent task id
+     *
+     * @param int $taskId
+     * @param bool $withParent
+     * @param ?string $status
+     * @return array
+     */
+    public function getSubTaskIds(int $taskId, bool $withParent, ?string $status = null): array
     {
         $children = [];
         if ($withParent) {
@@ -95,8 +104,12 @@ class Task extends Model
 
     /**
      * Scope a query to fulltext search
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $search
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSearch(Builder $query, $search = '')
+    public function scopeSearch(Builder $query, string $search): Builder
     {
         $query->when($search, function ($query, $search) {
             $query->whereFullText(['title', 'description'], $search);
@@ -109,8 +122,12 @@ class Task extends Model
 
     /**
      * Scope a query to sort
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $sortStrValues
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSorting(Builder $query, $sortStrValues = [])
+    public function scopeSorting(Builder $query, string $sortStrValues): Builder
     {
         $sortValues = array_filter(array_map('trim', explode(',', $sortStrValues)));
         if (!empty($sortValues)) {
