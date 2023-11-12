@@ -3,29 +3,28 @@
 namespace App\Interfaces;
 
 use App\Http\Requests\TaskRequest;
-use Illuminate\Http\Request;
 
-interface TaskInterface
+interface TaskRepositoryInterface
 {
     /**
      * Get all Tasks
      */
-    public function getAllTasks(Request $request);
+    public function getAllTasks($status, $priority, $search, $sort);
 
     /**
      * Create Task
      *
-     * @param \App\Http\Requests\TaskRequest $request
+     * @param array $requestData
      */
-    public function createTask(TaskRequest $request);
+    public function createTask(array $requestData);
 
     /**
      * Update Task
      *
-     * @param \App\Http\Requests\TaskRequest $request
+     * @param array $requestData
      * @param integer $id
      */
-    public function updateTask(TaskRequest $request, int $id);
+    public function updateTask(array $requestData, int $id);
 
     /**
      * Complete Task

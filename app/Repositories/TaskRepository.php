@@ -3,49 +3,47 @@
 namespace App\Repositories;
 
 use App\Http\Requests\TaskRequest;
-use App\Interfaces\TaskInterface;
+use App\Interfaces\TaskRepositoryInterface;
 use App\Models\Task;
-use Illuminate\Http\Request;
 
-class TaskRepository implements TaskInterface
+class TaskRepository implements TaskRepositoryInterface
 {
-    public function getAllTasks(Request $request)
+    public function getAllTasks($status, $priority, $search, $sort)
     {
         $query = Task::query();
 
         // Status Parameter
-        if ($request->has('status') && $request->status) {
-            $query->where('status', $request->status);
+        if ($status) {
+            $query->where('status', $status);
         }
 
         // Priority Parameter
-        if ($request->has('priority') && $request->priority) {
-            $query->where('priority', $request->priority);
+        if ($priority) {
+            $query->where('priority', $priority);
         }
 
         // Search Parameter
-        if ($request->has('search')) {
-            $query->search($request->search);
+        if ($search) {
+            $query->search($search);
         }
 
         // Sort Parameter
-        if ($request->has('sort')) {
-            $query->sorting($request->sort);
+        if ($sort) {
+            $query->sorting($sort);
         }
 
         return $query->get()->all();
     }
 
-    public function createTask(TaskRequest $request)
+    public function createTask($requestData)
     {
-        return Task::create($request->all());
+        return Task::create($requestData);
     }
 
-    public function updateTask(TaskRequest $request, $id)
+    public function updateTask($requestData, $id)
     {
         $task = Task::findOrFail($id);
-
-        $task->fill($request->except(['id', 'user_id']));
+        $task->fill($requestData);
         $task->save();
 
         return $task;

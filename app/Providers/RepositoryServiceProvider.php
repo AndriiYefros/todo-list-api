@@ -12,7 +12,7 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            'App\Interfaces\TaskInterface',
+            'App\Interfaces\TaskRepositoryInterface',
             'App\Repositories\TaskRepository'
         );
     }

@@ -4,20 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
-use App\Interfaces\TaskInterface;
+use App\Interfaces\TaskRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
-    protected $taskInterface;
+    protected $taskRepositoryInterface;
 
     /**
      * Create a new constructor for this controller
      */
-    public function __construct(TaskInterface $taskInterface)
+    public function __construct(TaskRepositoryInterface $taskRepositoryInterface)
     {
-        $this->taskInterface = $taskInterface;
+        $this->taskRepositoryInterface = $taskRepositoryInterface;
     }
 
     /**
@@ -25,7 +25,12 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->taskInterface->getAllTasks($request);
+        $status = $request->has('status') && $request->status ? $request->status : null;
+        $priority = $request->has('priority') && $request->priority ? $request->priority : null;
+        $search = $request->has('search') && $request->search ? $request->search : null;
+        $sort = $request->has('sort') && $request->sort ? $request->sort : null;
+
+        return $this->taskRepositoryInterface->getAllTasks($status, $priority, $search, $sort);
     }
 
     /**
@@ -36,7 +41,9 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        return $this->taskInterface->createTask($request);
+        $requestData = $request->all();
+
+        return $this->taskRepositoryInterface->createTask($requestData);
     }
 
     /**
@@ -44,7 +51,9 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, int $id)
     {
-        return $this->taskInterface->updateTask($request, $id);
+        $requestData = $request->except(['id', 'user_id']);
+
+        return $this->taskRepositoryInterface->updateTask($requestData, $id);
     }
 
     /**
@@ -52,7 +61,7 @@ class TaskController extends Controller
      */
     public function complete(int $id)
     {
-        return $this->taskInterface->completeTask($id);
+        return $this->taskRepositoryInterface->completeTask($id);
     }
 
     /**
@@ -60,7 +69,7 @@ class TaskController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->taskInterface->deleteTask($id);
+        $this->taskRepositoryInterface->deleteTask($id);
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
