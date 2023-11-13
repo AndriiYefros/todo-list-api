@@ -16,7 +16,7 @@ class TaskRepository implements TaskRepositoryInterface
      * @param ?string $sort
      * @return array
      */
-    public function getAllTasks(?string $status, ?int $priority, ?string $search, ?string $sort)
+    public function getAllTasks(?string $status, ?int $priority, ?string $search, ?string $sort): array
     {
         $query = Task::query();
 
