@@ -70,7 +70,7 @@ class TaskRepository implements TaskRepositoryInterface
     {
         $task = Task::findOrFail($id);
 
-        $ids = (new Task)->getSubTaskIds($id, false, 'todo');
+        $ids = (new Task())->getSubTaskIds($id, false, 'todo');
         if ($ids) {
             return $task;
         }

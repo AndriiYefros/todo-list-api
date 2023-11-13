@@ -2,8 +2,6 @@
 
 namespace App\Interfaces;
 
-use App\Http\Requests\TaskRequest;
-
 interface TaskRepositoryInterface
 {
     /**

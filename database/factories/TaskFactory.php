@@ -18,13 +18,11 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'parent_id' => 0,
             'user_id' => rand(1, 10),
             'status' => Task::TODO,
             'priority' => rand(1, 5),
             'title' => fake()->sentence(5),
             'description' => fake()->paragraph(),
-            'created_at' => now(),
         ];
     }
 }
