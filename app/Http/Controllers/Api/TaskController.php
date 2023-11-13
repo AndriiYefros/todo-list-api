@@ -51,7 +51,7 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, int $id)
     {
-        $requestData = $request->all();
+        $requestData = $request->except(['user_id']);
 
         return $this->taskRepositoryInterface->updateTask($requestData, $id);
     }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class Task extends Model
 {
@@ -65,12 +66,14 @@ class Task extends Model
         parent::boot();
 
         self::creating(function ($model) {
-            $model->user_id = auth()->id();
+            if (Auth::check()) {
+                $model->user_id = Auth::id();
+            }
             $model->created_at = now();
         });
 
         self::addGlobalScope(function (Builder $builder) {
-            $builder->where('user_id', auth()->id());
+            $builder->where('user_id', Auth::id());
         });
     }
 
