@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TaskStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,17 +14,6 @@ class Task extends Model
     use HasFactory;
 
     public $timestamps = false;
-
-    public const TODO = 'todo';
-    public const DONE = 'done';
-
-    /**
-     * @var array
-     */
-    public static array $statusValues = [
-        self::TODO,
-        self::DONE,
-    ];
 
     /**
      * The attributes that are mass assignable.
@@ -39,13 +29,22 @@ class Task extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'status' => TaskStatus::class,
+    ];
+
+    /**
      * The model's default values for attributes.
      *
      * @var array
      */
     protected $attributes = [
         'parent_id' => 0,
-        'status' => self::TODO,
+        'status' => TaskStatus::TODO,
         'priority' => 1,
     ];
 

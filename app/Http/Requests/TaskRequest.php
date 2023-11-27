@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Task;
+use App\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,7 +25,7 @@ class TaskRequest extends FormRequest
     {
         return [
             'parent_id' => ['integer'],
-            'status' => ['string', Rule::in(Task::$statusValues)],
+            'status' => ['string', Rule::in(TaskStatus::toArray())],
             'priority' => ['integer', 'min:1', 'max:5'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],

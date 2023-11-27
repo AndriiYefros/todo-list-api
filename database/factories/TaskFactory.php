@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Task;
+use App\Enums\TaskStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +19,7 @@ class TaskFactory extends Factory
     {
         return [
             'user_id' => rand(1, 10),
-            'status' => Task::TODO,
+            'status' => TaskStatus::TODO,
             'priority' => rand(1, 5),
             'title' => fake()->sentence(5),
             'description' => fake()->paragraph(),

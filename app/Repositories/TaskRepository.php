@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\TaskStatus;
 use App\Interfaces\TaskRepositoryInterface;
 use App\Models\Task;
 
@@ -70,13 +71,13 @@ class TaskRepository implements TaskRepositoryInterface
     {
         $task = Task::findOrFail($id);
 
-        $ids = (new Task())->getSubTaskIds($id, false, 'todo');
+        $ids = (new Task())->getSubTaskIds($id, false, TaskStatus::TODO->value);
         if ($ids) {
             return $task;
         }
 
-        if ($task->status === Task::TODO || is_null($task->completed_at)) {
-            $task->status = Task::DONE;
+        if ($task->status === TaskStatus::TODO || is_null($task->completed_at)) {
+            $task->status = TaskStatus::DONE;
             $task->completed_at = now();
             $task->save();
         }
@@ -93,7 +94,7 @@ class TaskRepository implements TaskRepositoryInterface
     {
         $task = Task::where([
             ['id', '=', $id],
-            ['status', '=', Task::TODO],
+            ['status', '=', TaskStatus::TODO],
         ])->firstOrFail();
 
         return $task->delete();

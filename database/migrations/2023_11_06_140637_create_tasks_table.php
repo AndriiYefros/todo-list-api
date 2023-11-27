@@ -14,7 +14,7 @@ return new class () extends Migration {
             $table->id();
             $table->unsignedBigInteger('parent_id');
             $table->unsignedBigInteger('user_id');
-            $table->enum('status', ['todo', 'done']);
+            $table->string('status')->default(\App\Enums\TaskStatus::TODO);
             $table->tinyInteger('priority', false, true);
             $table->string('title');
             $table->text('description');
