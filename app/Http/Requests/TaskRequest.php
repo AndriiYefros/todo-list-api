@@ -27,7 +27,7 @@ class TaskRequest extends FormRequest
             'parent_id' => ['integer'],
             'status' => ['string', Rule::in(TaskStatus::toArray())],
             'priority' => ['integer', 'min:1', 'max:5'],
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'unique:tasks', 'string', 'max:255'],
             'description' => ['required', 'string'],
         ];
     }
