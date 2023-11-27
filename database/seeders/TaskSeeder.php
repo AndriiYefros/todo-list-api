@@ -13,7 +13,6 @@ class TaskSeeder extends Seeder
     {
         \App\Models\Task::factory(10)->create([
             'parent_id' => 0,
-            //'user_id' => 1,
         ]);
     }
 }
