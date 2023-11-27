@@ -27,15 +27,15 @@ class AuthController extends Controller
 
             if ($validateUser->fails()) {
                 return response()->json([
-                    'status' => false,
-                    'message' => 'Validation Error',
+                    'success' => false,
+                    'message' => 'Validation error',
                     'errors' => $validateUser->errors(),
                 ], 401);
             }
 
             if (! Auth::attempt($request->only(['email', 'password']))) {
                 return response()->json([
-                    'status' => false,
+                    'success' => false,
                     'message' => 'Email & Password does not match with our record',
                 ], 401);
             }
@@ -46,14 +46,14 @@ class AuthController extends Controller
             $user->tokens()->delete();
 
             return response()->json([
-                'status' => true,
-                'message' => 'User Logged In Successfully',
-                'token' => $user->createToken('MY API TOKEN')->plainTextToken,
+                'success' => true,
+                'message' => 'User successfully logged',
+                'token' => $user->createToken('API TOKEN')->plainTextToken,
             ]);
 
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => $th->getMessage(),
             ], 500);
         }
